@@ -1,0 +1,71 @@
+Roles are used to segregate the playbook tasks into different directories as per roles(variable, File). 
+
+---
+ - name: Please create the playbook the web server and apache
+   hosts: all
+   gather_facts: true
+   become: yes
+   tasks:
+    - name: Install the http on RedHat server
+      yum:
+        name: httpd
+        state: latest
+      when: ansible_os_family == "RedHat"
+      notify: Start the http service
+
+    - name: Please install the apache on Debian Server
+      apt:
+       name: apache2
+       state: latest
+      when: ansible_os_family == "Debian"
+      notify:  Start the apache service
+
+   handlers:
+     - name: Start the http service
+       service:
+        name: httpd
+        state: started
+
+     - name: Start the apache service
+       service:
+        name: apache2
+        state: started
+
+
+We will conver the above playbook into Roles , Please execute the below commands, 
+
+#ansible-galaxy init  webserver   ---> Install the roles related file and directories using the ansible-galaxy command.
+
+[root@ansibleengine ~]# tree .
+[ansadmin@ansibleengine webserver]$ tree .
+.
+├── defaults
+│   └── main.yml
+├── files
+├── handlers
+│   └── main.yml
+├── meta
+│   └── main.yml
+├── README.md
+├── tasks
+│   └── main.yml
+├── templates
+├── tests
+│   ├── inventory
+│   └── test.yml
+└── vars
+    └── main.yml
+
+defaults - Playbook can get the required variables value in the vars directory else will search on the defaults directory. 
+files - We can copy the required files to copy into managed nodes. 
+template - We can define the template data in this section. 
+test - it's used to test the playbook before deploy in main playbook
+vars - It's used to define the required playbook variables in this section. 
+
+
+
+
+
+
+  
+   
